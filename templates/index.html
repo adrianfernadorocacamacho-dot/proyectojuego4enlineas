@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>4 en Raya 4x4 - Estructura Árbol Binario</title>
+    <title>4 en Raya 6x6 - MVC, Minimax y Machine Learning</title>
     <link rel="stylesheet" href="/static/css/style.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
@@ -11,24 +11,74 @@
 <body>
     <div class="container">
         <header>
-            <h1>4 en Raya <i>Tradicional</i></h1>
-            <p>Estructura de datos: Árbol Binario de Búsqueda (ClaseNodo y ArbolBinario)</p>
+            <h1>4 en Raya <i>Tradicional 6x6</i></h1>
+            <p>Arquitectura MVC | Minimax con Backtracking | DecisionTreeClassifier</p>
         </header>
 
+        <!-- Controles y Selección de los 3 Modos de Juego (Criterio 10% UX) -->
         <div class="controls">
             <select id="mode-select">
-                <option value="minimax">Árbol Binario - Minimax Tradicional (Búsqueda Completa)</option>
-                <option value="alphabeta">Árbol Binario - Minimax con Poda Alfa-Beta</option>
+                <option value="minimax">1. Humano vs Minimax (Fuerza Bruta & Backtracking)</option>
+                <option value="alphabeta">2. Humano vs Minimax (Poda Alfa-Beta - Optimizado)</option>
+                <option value="ml">3. Humano vs Machine Learning (DecisionTreeClassifier)</option>
             </select>
             <button id="reset-btn" class="btn">Reiniciar Partida</button>
+            <button id="benchmark-btn" class="btn btn-secondary">Ejecutar Benchmark</button>
+        </div>
+
+        <!-- Barra elegante de visualización de métricas en tiempo real (Criterio 10% UX) -->
+        <div class="metrics-bar">
+            <div class="metric-item">
+                <span class="m-label">Tiempo IA:</span>
+                <span id="metric-time" class="m-value">- ms</span>
+            </div>
+            <div class="metric-item">
+                <span class="m-label">Nodos Evaluados:</span>
+                <span id="metric-nodes" class="m-value">-</span>
+            </div>
+            <div class="metric-item">
+                <span class="m-label">Modo Activo:</span>
+                <span id="metric-mode" class="m-value">Minimax (Backtracking)</span>
+            </div>
         </div>
 
         <div class="main-content">
             <div class="board-container">
                 <div id="board" class="board">
-                    <!-- 16 celdas -->
+                    <!-- 36 celdas generadas dinámicamente -->
                 </div>
                 <div id="status-message" class="status-message">Tu turno (Rojo)</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Resultados del Benchmark Comparativo (Criterio 10% Reporte) -->
+    <div id="benchmark-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Benchmark Comparativo (Minimax vs Machine Learning)</h3>
+                <button id="close-bm" class="close-btn">&times;</button>
+            </div>
+            <p class="modal-subtitle">Pruebas empíricas automatizadas sobre múltiples estados del tablero 6x6:</p>
+            <div class="bm-cards">
+                <div class="bm-card">
+                    <h4>Minimax Tradicional</h4>
+                    <p>Tiempo: <b id="bm-mm-time">-</b> ms</p>
+                    <p>Nodos promedio: <b id="bm-mm-nodes">-</b></p>
+                    <small>Complejidad exponencial $O(b^d)$</small>
+                </div>
+                <div class="bm-card">
+                    <h4>Poda Alfa-Beta</h4>
+                    <p>Tiempo: <b id="bm-ab-time">-</b> ms</p>
+                    <p>Nodos promedio: <b id="bm-ab-nodes">-</b></p>
+                    <small>Complejidad podada $O(b^{d/2})$</small>
+                </div>
+                <div class="bm-card">
+                    <h4>DecisionTreeClassifier</h4>
+                    <p>Tiempo: <b id="bm-ml-time">-</b> ms</p>
+                    <p>Inferencia: <b>O(1)</b></p>
+                    <small>Tiempo de respuesta casi instantáneo</small>
+                </div>
             </div>
         </div>
     </div>

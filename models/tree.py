@@ -1,6 +1,6 @@
 """
-Módulo puente para compatibilidad. Re-exporta la estructura de datos tradicional
-de la carpeta arbolBinario (ClaseNodo y ArbolBinario).
+Módulo puente para compatibilidad. Re-exporta la estructura de datos
+tradicional de la carpeta arbolBinario (ClaseNodo y ArbolBinario).
 """
 
 from arbolBinario.ClaseNodo import ClaseNodo

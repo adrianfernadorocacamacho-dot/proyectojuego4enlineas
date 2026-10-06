@@ -7,14 +7,15 @@ version: 3.13.7
 
 
 class ClaseNodo:
-    
+
     '''
     nota: representa un nodo de un árbol binario.
-    argumentos: 
+    argumentos:
         - valor: número o dato que se almacenará en el nodo.
     retorna: un objeto de tipo ClaseNodo con valor y referencias
              a hijo izquierdo y derecho inicializadas en None.
     '''
+
     def __init__(self, valor):
         self._valor = valor
         self._hijoIzquierdo = None
@@ -25,6 +26,7 @@ class ClaseNodo:
     argumentos: ninguno.
     retorna: el objeto ClaseNodo que es hijo izquierdo, o None si no existe.
     '''
+
     def getHijoIzquierdo(self):
         return self._hijoIzquierdo
 
@@ -33,24 +35,27 @@ class ClaseNodo:
     argumentos: ninguno.
     retorna: el objeto ClaseNodo que es hijo derecho, o None si no existe.
     '''
+
     def getHijoDerecho(self):
         return self._hijoDerecho
-    
+
     '''
     nota: asigna un nodo como hijo izquierdo.
-    argumentos: 
+    argumentos:
         - nodo: objeto de tipo ClaseNodo a establecer como hijo izquierdo.
     retorna: nada.
     '''
+
     def setHijoIzquierdo(self, nodo):
         self._hijoIzquierdo = nodo
 
     '''
     nota: asigna un nodo como hijo derecho.
-    argumentos: 
+    argumentos:
         - nodo: objeto de tipo ClaseNodo a establecer como hijo derecho.
     retorna: nada.
     '''
+
     def setHijoDerecho(self, nodo):
         self._hijoDerecho = nodo
 
@@ -59,14 +64,16 @@ class ClaseNodo:
     argumentos: ninguno.
     retorna: el valor del nodo.
     '''
+
     def getValor(self):
         return self._valor
-    
+
     '''
     nota: asigna un nuevo valor al nodo.
-    argumentos: 
+    argumentos:
         - valor: dato que se quiere almacenar en el nodo.
     retorna: nada.
     '''
+
     def setValor(self, valor):
         self._valor = valor

@@ -14,7 +14,7 @@ class ArbolBinario:
     '''
     nota:inserta un nuevo valor en el árbol binario de búsqueda.
     argumentos: recibe un numero entero o dato comparable
-    retorna: nada, pero actualiza la raíz del árbol. 
+    retorna: nada, pero actualiza la raíz del árbol.
     '''
 
     def insertar(self, valor):
@@ -23,10 +23,10 @@ class ArbolBinario:
     '''
     nota: función auxiliar recursiva que busca la posición correcta
           e inserta el nuevo valor dentro del árbol binario de búsqueda.
-    argumentos: 
+    argumentos:
         - raizAux: nodo actual (puede ser None si llegamos a un lugar vacío).
         - valor: dato que se quiere insertar.
-    retorna: 
+    retorna:
         - un objeto ClaseNodo que representa la raíz del subárbol modificado.
     '''
 
@@ -37,9 +37,11 @@ class ArbolBinario:
             return raizAux
         else:
             if valor < raizAux.getValor():
-                raizAux.setHijoIzquierdo(self._insertarRecursivo(raizAux.getHijoIzquierdo(), valor))
+                raizAux.setHijoIzquierdo(self._insertarRecursivo(
+                    raizAux.getHijoIzquierdo(), valor))
             else:
-                raizAux.setHijoDerecho(self._insertarRecursivo(raizAux.getHijoDerecho(), valor))
+                raizAux.setHijoDerecho(self._insertarRecursivo(
+                    raizAux.getHijoDerecho(), valor))
             return raizAux
 
     """
@@ -49,6 +51,7 @@ class ArbolBinario:
     Retorna:
         None.
     """
+
     def insertarIterativo(self, valor):
         nuevoNodo = ClaseNodo(valor)
         if self._raiz is None:
@@ -72,38 +75,44 @@ class ArbolBinario:
     argumentos: ninguno.
     retorna: True si la raíz es None (árbol vacío), False en caso contrario.
     '''
+
     def isVacio(self):
         return self._raiz is None
 
     '''
     nota: determina si un nodo es hoja (no tiene hijos).
-    argumentos: 
+    argumentos:
         - nodo: objeto de tipo ClaseNodo.
     retorna: True si el nodo no tiene hijos izquierdo ni derecho,
              False en caso contrario.
     '''
+
     def esHoja(self, nodo):
-        return nodo.getHijoIzquierdo() is None and nodo.getHijoDerecho() is None
+        return (nodo.getHijoIzquierdo() is None
+                and nodo.getHijoDerecho() is None)
 
     """
     Nota:Busca un valor en el árbol binario de búsqueda.
     Argumentos:
         valor: El valor que se desea buscar en el árbol.
     Retorna:
-        bool: True si el valor se encuentra en el árbol, False en caso contrario.
+        bool: True si el valor se encuentra en el árbol,
+              False en caso contrario.
     """
+
     def buscar(self, valor):
         return self._buscarRecursivo(self._raiz, valor)
 
     """
     Nota:Función auxiliar recursiva para realizar la búsqueda en el árbol.
     Argumentos:
-        nodo (ClaseNodo | None): El nodo actual del árbol desde donde se realiza la búsqueda.
+        nodo (ClaseNodo | None): Nodo actual del árbol desde donde se busca.
         valor: El valor que se desea buscar.
     Retorna:
         bool: True si el valor está en el subárbol a partir del nodo dado,
               False si no se encuentra.
     """
+
     def _buscarRecursivo(self, nodo, valor):
         if nodo is None:
             return False
@@ -119,8 +128,10 @@ class ArbolBinario:
     Argumentos:
         valor: El valor que se desea buscar en el árbol.
     Retorna:
-        bool: True si el valor se encuentra en el árbol, False en caso contrario.
+        bool: True si el valor se encuentra en el árbol,
+              False en caso contrario.
     """
+
     def buscarIterativo(self, valor):
         nodoActual = self._raiz
         while nodoActual is not None:
@@ -133,10 +144,12 @@ class ArbolBinario:
         return False
 
     """
-    nota:Recorre el árbol binario de búsqueda en orden (in-order) de manera iterativa.
+    nota:Recorre el árbol binario de búsqueda en orden
+         (in-order) de manera iterativa.
     Retorna:
         list: Una lista con los valores del árbol en orden ascendente.
     """
+
     def inOrden(self):
         listado = []
         pila = []
@@ -154,10 +167,12 @@ class ArbolBinario:
         return listado
 
     """
-    Recorre el árbol binario de búsqueda en orden (in-order) de manera recursiva.
+    Recorre el árbol binario de búsqueda en orden
+    (in-order) de manera recursiva.
     Retorna:
         list: Una lista con los valores del árbol en orden ascendente.
     """
+
     def inOrdenRecursivo(self):
         listado = []
         self._inOrdenRecursivoAux(self._raiz, listado)
@@ -169,6 +184,7 @@ class ArbolBinario:
         nodo (ClaseNodo | None): Nodo actual del recorrido.
         listado (list): Lista en la que se almacenan los valores recorridos.
     """
+
     def _inOrdenRecursivoAux(self, nodo, listado):
         if nodo is not None:
             self._inOrdenRecursivoAux(nodo.getHijoIzquierdo(), listado)
@@ -176,10 +192,12 @@ class ArbolBinario:
             self._inOrdenRecursivoAux(nodo.getHijoDerecho(), listado)
 
     """
-    Recorre el árbol binario de búsqueda en postorden (post-order) de manera iterativa.
+    Recorre el árbol binario de búsqueda en postorden
+    (post-order) de manera iterativa.
     Retorna:
         list: Una lista con los valores del árbol en orden postorden.
     """
+
     def posOrden(self):
         listado = []
         if self._raiz is None:
@@ -203,10 +221,12 @@ class ArbolBinario:
         return listado
 
     """
-    Recorre el árbol binario de búsqueda en postorden (post-order) de manera recursiva.
+    Recorre el árbol binario de búsqueda en postorden
+    (post-order) de manera recursiva.
     Retorna:
         list: Una lista con los valores del árbol en orden postorden.
     """
+
     def posOrdenRecursivo(self):
         listado = []
         self._posOrdenRecursivoAux(self._raiz, listado)
@@ -215,6 +235,7 @@ class ArbolBinario:
     """
     Función auxiliar recursiva para recorrer el árbol en postorden.
     """
+
     def _posOrdenRecursivoAux(self, nodo, listado):
         if nodo is not None:
             self._posOrdenRecursivoAux(nodo.getHijoIzquierdo(), listado)
@@ -222,10 +243,12 @@ class ArbolBinario:
             listado.append(nodo.getValor())
 
     """
-    Recorre el árbol binario de búsqueda en preorden (pre-order) de manera iterativa.
+    Recorre el árbol binario de búsqueda en preorden
+    (pre-order) de manera iterativa.
     Retorna:
         list: Una lista con los valores del árbol en orden preorden.
     """
+
     def preOrden(self):
         listado = []
         if self._raiz is None:
@@ -245,10 +268,12 @@ class ArbolBinario:
         return listado
 
     """
-    Recorre el árbol binario de búsqueda en preorden (pre-order) de manera recursiva.
+    Recorre el árbol binario de búsqueda en preorden
+    (pre-order) de manera recursiva.
     Retorna:
         list: Una lista con los valores del árbol en orden preorden.
     """
+
     def preOrdenRecursivo(self):
         listado = []
         self._preOrdenRecursivoAux(self._raiz, listado)
@@ -257,6 +282,7 @@ class ArbolBinario:
     """
     Función auxiliar recursiva para recorrer el árbol en preorden.
     """
+
     def _preOrdenRecursivoAux(self, nodo, listado):
         if nodo is not None:
             listado.append(nodo.getValor())
@@ -267,12 +293,14 @@ class ArbolBinario:
     Calcula la altura del árbol binario de búsqueda de manera recursiva.
     Retorna: (int) La altura del árbol.
     """
+
     def altura(self):
         return self._alturaAux(self._raiz)
 
     """
     Función auxiliar recursiva para calcular la altura del árbol.
     """
+
     def _alturaAux(self, nodo):
         if nodo is None:
             return 0
@@ -283,6 +311,7 @@ class ArbolBinario:
     """
     Función iterativa para contar altura
     """
+
     def alturaIt(self):
         alturaDelArbol = 0
         if not self.isVacio():
@@ -302,12 +331,14 @@ class ArbolBinario:
     Función recursiva para contar nodos
     Retorna: (int) La cantidad de nodos en el árbol.
     """
+
     def cantidadNodos(self):
         return self._cantidadNodosAux(self._raiz)
 
     """
     Función auxiliar recursiva para contar nodos
     """
+
     def _cantidadNodosAux(self, nodo):
         if nodo is None:
             return 0
@@ -318,6 +349,7 @@ class ArbolBinario:
     """
     Función iterativa para contar nodos
     """
+
     def cantidadNodosIt(self):
         if self.isVacio():
             return 0
@@ -334,8 +366,9 @@ class ArbolBinario:
 
     """
     Realiza un recorrido por amplitud (nivel por nivel) del árbol binario.
-    Retorna: (list) Los valores de los nodos en el orden en que fueron visitados.
+    Retorna: (list) Los valores de los nodos en el orden visitado.
     """
+
     def amplitud(self):
         if self.isVacio():
             return []
@@ -357,6 +390,7 @@ class ArbolBinario:
     """
     Recorrido por niveles recursivo
     """
+
     def amplitudRecursivo(self):
         resultado = []
         h = self.altura()
@@ -372,12 +406,15 @@ class ArbolBinario:
         if nivel == 1:
             resultado.append(nodo.getValor())
         elif nivel > 1:
-            self._amplitudRecursivoAux(nodo.getHijoIzquierdo(), nivel - 1, resultado)
-            self._amplitudRecursivoAux(nodo.getHijoDerecho(), nivel - 1, resultado)
+            self._amplitudRecursivoAux(
+                nodo.getHijoIzquierdo(), nivel - 1, resultado)
+            self._amplitudRecursivoAux(
+                nodo.getHijoDerecho(), nivel - 1, resultado)
 
     """
     Elimina un valor del árbol binario de búsqueda.
     """
+
     def eliminar(self, valor):
         self._raiz = self._eliminarRecursivo(self._raiz, valor)
 
@@ -386,11 +423,14 @@ class ArbolBinario:
             return None
 
         if valor < nodo.getValor():
-            nodo.setHijoIzquierdo(self._eliminarRecursivo(nodo.getHijoIzquierdo(), valor))
+            nodo.setHijoIzquierdo(self._eliminarRecursivo(
+                nodo.getHijoIzquierdo(), valor))
         elif valor > nodo.getValor():
-            nodo.setHijoDerecho(self._eliminarRecursivo(nodo.getHijoDerecho(), valor))
+            nodo.setHijoDerecho(self._eliminarRecursivo(
+                nodo.getHijoDerecho(), valor))
         else:
-            if nodo.getHijoIzquierdo() is None and nodo.getHijoDerecho() is None:
+            if (nodo.getHijoIzquierdo() is None
+                    and nodo.getHijoDerecho() is None):
                 return None
             elif nodo.getHijoIzquierdo() is None:
                 return nodo.getHijoDerecho()
@@ -399,7 +439,8 @@ class ArbolBinario:
             else:
                 sucesor = self._minValorNodo(nodo.getHijoDerecho())
                 nodo.setValor(sucesor.getValor())
-                nodo.setHijoDerecho(self._eliminarRecursivo(nodo.getHijoDerecho(), sucesor.getValor()))
+                nodo.setHijoDerecho(self._eliminarRecursivo(
+                    nodo.getHijoDerecho(), sucesor.getValor()))
 
         return nodo
 
@@ -435,7 +476,8 @@ class ArbolBinario:
         if nodo is None:
             return ""
 
-        resultado = prefijo + ("└── " if esUltimo else "├── ") + str(nodo.getValor()) + "\n"
+        resultado = prefijo + \
+            ("└── " if esUltimo else "├── ") + str(nodo.getValor()) + "\n"
 
         hijos = []
         if nodo.getHijoIzquierdo() is not None:
@@ -446,6 +488,7 @@ class ArbolBinario:
         for i, (tipo, hijo) in enumerate(hijos):
             esUltimoHijo = i == len(hijos) - 1
             nuevoPrefijo = prefijo + ("    " if esUltimo else "│   ")
-            resultado += self._estructuraVisualRecursiva(hijo, nuevoPrefijo, esUltimoHijo)
+            resultado += self._estructuraVisualRecursiva(
+                hijo, nuevoPrefijo, esUltimoHijo)
 
         return resultado

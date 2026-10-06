@@ -1,21 +1,24 @@
 """
-Módulo de modelos y agentes para el juego Conecta 4 (4x4).
+Módulo de modelos y agentes para el juego Conecta 4 (6x6).
 
 Contiene:
 - GameModel: Tablero y lógica de Connect 4.
 - MinimaxAgent: Agente inteligente que utiliza ArbolBinario y ClaseNodo.
-- ArbolBinario y ClaseNodo: Estructuras clásicas de árbol binario de búsqueda.
-- run_benchmark: Prueba comparativa de rendimiento.
+- MLAgent: Agente ML entrenado con DecisionTreeClassifier (scikit-learn).
+- ArbolBinario y ClaseNodo: Estructuras clásicas de árbol binario.
+- run_benchmark: Generador de métricas comparativas.
 """
 
 from .game_model import GameModel
 from .minimax_agent import MinimaxAgent
+from .ml_agent import MLAgent
 from .tree import ArbolBinario, ClaseNodo, Arbol, Nodo, Jugada
 from .benchmark import run_benchmark
 
 __all__ = [
     "GameModel",
     "MinimaxAgent",
+    "MLAgent",
     "ArbolBinario",
     "ClaseNodo",
     "Arbol",
