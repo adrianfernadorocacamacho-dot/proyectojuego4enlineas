@@ -5,12 +5,7 @@ let gameOver = false;
 const boardEl = document.getElementById('board');
 const statusEl = document.getElementById('status-message');
 const resetBtn = document.getElementById('reset-btn');
-const benchmarkBtn = document.getElementById('benchmark-btn');
 const modeSelect = document.getElementById('mode-select');
-
-const timeMetric = document.getElementById('time-metric');
-const nodesMetric = document.getElementById('nodes-metric');
-const benchmarkResults = document.getElementById('benchmark-results');
 
 function initBoard() {
     boardEl.innerHTML = '';
@@ -65,10 +60,10 @@ async function handleCellClick(col) {
 
     // Turno IA
     currentTurn = 2;
-    statusEl.innerText = 'IA Pensando...';
+    statusEl.innerText = 'IA pensando...';
     
     const mode = modeSelect.value;
-    const endpoint = mode === 'minimax' ? '/api/minimax-move' : '/api/ml-move';
+    const endpoint = mode === 'minimax' ? '/api/minimax-move' : '/api/alphabeta-move';
     
     response = await fetch(endpoint, {
         method: 'POST',
@@ -79,10 +74,6 @@ async function handleCellClick(col) {
     data = await response.json();
     board = data.board;
     updateBoardUI();
-    
-    // Update metrics
-    timeMetric.innerText = `${data.time_ms.toFixed(2)} ms`;
-    nodesMetric.innerText = data.nodes;
 
     if (data.win) {
         endGame('La IA ha ganado.');
@@ -102,32 +93,15 @@ function endGame(msg) {
     statusEl.innerText = msg;
 }
 
-resetBtn.addEventListener('click', () => {
-    board = new Array(16).fill(0);
-    currentTurn = 1;
-    gameOver = false;
-    statusEl.innerText = 'Tu turno (Rojo)';
-    timeMetric.innerText = '- ms';
-    nodesMetric.innerText = '-';
-    initBoard();
-});
+if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+        board = new Array(16).fill(0);
+        currentTurn = 1;
+        gameOver = false;
+        statusEl.innerText = 'Tu turno (Rojo)';
+        initBoard();
+    });
+}
 
-benchmarkBtn.addEventListener('click', async () => {
-    benchmarkBtn.disabled = true;
-    benchmarkBtn.innerText = 'Ejecutando...';
-    
-    const response = await fetch('/api/benchmark');
-    const data = await response.json();
-    
-    document.getElementById('bm-mm-time').innerText = data.minimax_time_ms;
-    document.getElementById('bm-mm-nodes').innerText = data.minimax_avg_nodes;
-    document.getElementById('bm-ml-time').innerText = data.ml_time_ms;
-    document.getElementById('bm-ml-nodes').innerText = data.ml_avg_nodes;
-    
-    benchmarkResults.classList.remove('hidden');
-    benchmarkBtn.disabled = false;
-    benchmarkBtn.innerText = 'Ejecutar Benchmark';
-});
-
-// Init
+// Inicialización
 initBoard();

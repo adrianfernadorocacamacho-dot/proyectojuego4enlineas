@@ -1,27 +1,38 @@
 import os
+import sys
 import time
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
+
+import werkzeug
+if not hasattr(werkzeug, "__version__"):
+    try:
+        import importlib.metadata
+        werkzeug.__version__ = importlib.metadata.version("werkzeug")
+    except Exception:
+        werkzeug.__version__ = "3.1.3"
+
+# Asegurar que arbolBinario esté en el path (similar al repo de referencia)
+sys.path.append(os.path.join(os.path.dirname(__file__), "arbolBinario"))
 
 from flask import Flask, Response, jsonify, render_template, request
 
+from arbolBinario.ClaseArbolBinario import ArbolBinario
+from arbolBinario.ClaseNodo import ClaseNodo
 from models.benchmark import run_benchmark
 from models.game_model import GameModel
 from models.minimax_agent import MinimaxAgent
-from models.ml_agent import MLAgent
-
 
 app: Flask = Flask(__name__)
-minimax_agent: MinimaxAgent = MinimaxAgent()
-ml_agent: MLAgent = MLAgent()
+
+# Agentes basados en la estructura tradicional de ArbolBinario
+minimax_agent: MinimaxAgent = MinimaxAgent(usar_poda=False)
+alphabeta_agent: MinimaxAgent = MinimaxAgent(usar_poda=True)
 
 
 @app.route("/")
 def index() -> str:
     """
     Controlador de la página principal. Renderiza la interfaz de usuario.
-
-    Returns:
-        str: Plantilla HTML renderizada (templates/index.html).
     """
     return render_template("index.html")
 
@@ -30,18 +41,6 @@ def index() -> str:
 def human_move() -> Response:
     """
     Procesa el movimiento realizado por el jugador humano en el tablero.
-
-    Espera un JSON en el cuerpo con:
-        - board (List[int]): Vector del tablero (16 posiciones).
-        - col (int): Columna seleccionada por el usuario (0 a 3).
-        - player (int, opcional): ID del jugador (1 por defecto).
-
-    Returns:
-        Response: Respuesta JSON con el resultado de la jugada:
-            - success (bool): True si el movimiento fue legal.
-            - board (List[int]): Tablero actualizado.
-            - win (bool): True si el movimiento produjo victoria.
-            - draw (bool): True si la partida terminó en empate.
     """
     data: Dict[str, Any] = request.get_json(force=True) or {}
     board: List[int] = data.get("board", [])
@@ -63,25 +62,14 @@ def human_move() -> Response:
 @app.route("/api/minimax-move", methods=["POST"])
 def minimax_move() -> Response:
     """
-    Calcula y ejecuta la mejor jugada para la IA usando el algoritmo Minimax.
-
-    Espera un JSON en el cuerpo con:
-        - board (List[int]): Vector del estado actual del tablero.
-
-    Returns:
-        Response: Respuesta JSON con la jugada efectuada y métricas:
-            - board (List[int]): Tablero resultante tras colocar la ficha.
-            - col (Optional[int]): Columna elegida por Minimax.
-            - win (bool): True si la IA ganó con este movimiento.
-            - draw (bool): True si la partida quedó en tablas.
-            - time_ms (float): Tiempo de cómputo en milisegundos.
-            - nodes (int): Nodos del árbol evaluados durante la búsqueda.
+    Calcula y ejecuta la jugada para la IA usando Minimax tradicional,
+    almacenando las opciones evaluadas en una instancia de ArbolBinario.
     """
     data: Dict[str, Any] = request.get_json(force=True) or {}
     board: List[int] = data.get("board", [])
 
     start: float = time.time()
-    best_col, nodes = minimax_agent.get_best_move(board)
+    best_col, nodes = minimax_agent.get_best_move(board, depth=4)
     elapsed: float = (time.time() - start) * 1000
 
     win: bool = False
@@ -94,6 +82,17 @@ def minimax_move() -> Response:
     else:
         draw = True
 
+    # Métricas del Árbol Binario
+    tree = minimax_agent.arbol_decisiones
+    tree_info: Dict[str, Any] = {}
+    if tree is not None:
+        tree_info = {
+            "total_nodos": tree.cantidadNodos(),
+            "altura": tree.altura(),
+            "inorden": [str(x) for x in tree.inOrden()],
+            "ascii": tree.obtenerEstructuraVisual(),
+        }
+
     return jsonify({
         "board": board,
         "col": best_col,
@@ -101,31 +100,22 @@ def minimax_move() -> Response:
         "draw": draw,
         "time_ms": elapsed,
         "nodes": nodes,
+        "tree_info": tree_info,
     })
 
 
+@app.route("/api/alphabeta-move", methods=["POST"])
 @app.route("/api/ml-move", methods=["POST"])
-def ml_move() -> Response:
+def alphabeta_move() -> Response:
     """
-    Calcula y ejecuta la jugada para la IA mediante el Árbol de Decisión (ML).
-
-    Espera un JSON en el cuerpo con:
-        - board (List[int]): Vector del estado actual del tablero.
-
-    Returns:
-        Response: Respuesta JSON con la jugada efectuada y métricas:
-            - board (List[int]): Tablero resultante tras colocar la ficha.
-            - col (Optional[int]): Columna predicha por el clasificador.
-            - win (bool): True si la IA ganó con este movimiento.
-            - draw (bool): True si la partida quedó en tablas.
-            - time_ms (float): Tiempo de inferencia en milisegundos.
-            - nodes (int): Nodos evaluados (1 por predicción O(1)).
+    Calcula y ejecuta la jugada para la IA usando Minimax con Poda Alfa-Beta,
+    insertando las opciones evaluadas en ArbolBinario.
     """
     data: Dict[str, Any] = request.get_json(force=True) or {}
     board: List[int] = data.get("board", [])
 
     start: float = time.time()
-    col, nodes = ml_agent.get_move(board)
+    col, nodes = alphabeta_agent.get_best_move(board, depth=4)
     elapsed: float = (time.time() - start) * 1000
 
     win: bool = False
@@ -138,6 +128,17 @@ def ml_move() -> Response:
     else:
         draw = True
 
+    # Métricas del Árbol Binario
+    tree = alphabeta_agent.arbol_decisiones
+    tree_info: Dict[str, Any] = {}
+    if tree is not None:
+        tree_info = {
+            "total_nodos": tree.cantidadNodos(),
+            "altura": tree.altura(),
+            "inorden": [str(x) for x in tree.inOrden()],
+            "ascii": tree.obtenerEstructuraVisual(),
+        }
+
     return jsonify({
         "board": board,
         "col": col,
@@ -145,17 +146,14 @@ def ml_move() -> Response:
         "draw": draw,
         "time_ms": elapsed,
         "nodes": nodes,
+        "tree_info": tree_info,
     })
 
 
 @app.route("/api/benchmark", methods=["GET"])
 def benchmark() -> Response:
     """
-    Endpoint para ejecutar el benchmark comparativo de Minimax vs DecisionTree.
-
-    Returns:
-        Response: Respuesta JSON que contiene las métricas agregadas de
-        tiempo (ms) y nodos explorados para ambos enfoques de IA.
+    Endpoint para ejecutar el benchmark comparativo.
     """
     res: Dict[str, Any] = run_benchmark()
     return jsonify(res)
