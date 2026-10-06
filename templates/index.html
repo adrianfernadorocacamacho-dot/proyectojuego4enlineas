@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4 en Raya 4x4 - AI VS ML</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>4 en Raya <i>Simplificado</i></h1>
+            <p>Juega en un tablero de 4x4 contra Agentes Inteligentes</p>
+        </header>
+
+        <div class="controls">
+            <select id="mode-select">
+                <option value="minimax">Humano vs Minimax (Fuerza Bruta)</option>
+                <option value="ml">Humano vs Machine Learning (Decision Tree)</option>
+            </select>
+            <button id="reset-btn" class="btn">Reiniciar Partida</button>
+            <button id="benchmark-btn" class="btn btn-secondary">Ejecutar Benchmark</button>
+        </div>
+
+        <div class="main-content">
+            <div class="board-container">
+                <div id="board" class="board">
+                    <!-- 16 cells -->
+                </div>
+                <div id="status-message" class="status-message">Tu turno (Rojo)</div>
+            </div>
+
+            <div class="panel">
+                <h3>Panel de Métricas</h3>
+                <div class="metric">
+                    <span class="metric-label">Último tiempo de respuesta (IA):</span>
+                    <span id="time-metric" class="metric-value">- ms</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Nodos evaluados (IA):</span>
+                    <span id="nodes-metric" class="metric-value">-</span>
+                </div>
+                
+                <div id="benchmark-results" class="benchmark-results hidden">
+                    <h4>Resultados Benchmark (100 estados)</h4>
+                    <p><b>Minimax:</b> <span id="bm-mm-time"></span> ms (Avg Nodos: <span id="bm-mm-nodes"></span>)</p>
+                    <p><b>ML:</b> <span id="bm-ml-time"></span> ms (Avg Nodos: <span id="bm-ml-nodes"></span>)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="/static/js/main.js"></script>
+</body>
+</html>
